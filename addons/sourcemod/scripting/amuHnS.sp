@@ -334,8 +334,13 @@ public Action CS_OnTerminateRound(float & delay, CSRoundEndReason & reason) {
 }
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2]) {
-	if(GetClientTeam(client) == CS_TEAM_CT && g_bLocked)
-		return Plugin_Handled;
+	if(GetClientTeam(client) == CS_TEAM_CT && g_bLocked) {
+		// returning plugin handled casues various with lag and AC
+		vel[0] = 0.0;
+		vel[1] = 0.0;
+		buttons = 0;
+		return Plugin_Changed;
+	}
 	if(GetClientTeam(client) == CS_TEAM_CT) {
 		if (buttons & (IN_ATTACK)) {
 			int ActiveWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
